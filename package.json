@@ -1,0 +1,33 @@
+{
+  "name": "complaint",
+  "version": "1.0.0",
+  "description": "App for users to leave feedback on any website",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --config webpack-config/prod.js --mode production",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Ira Lee",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/chrome": "^0.0.198",
+    "babel-loader": "^8.2.5",
+    "clean-webpack-plugin": "^4.0.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "html-webpack-plugin": "^5.5.0",
+    "ts-loader": "^9.4.1",
+    "typescript": "^4.8.4",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0"
+  },
+  "dependencies": {
+    "http-browserify": "^1.7.0",
+    "https": "^1.0.0",
+    "https-browserify": "^1.0.0",
+    "process": "^0.11.10",
+    "stream": "^0.0.2",
+    "url": "^0.11.0",
+    "util": "^0.12.5"
+  }
+}

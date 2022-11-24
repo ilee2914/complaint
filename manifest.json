@@ -1,0 +1,12 @@
+{
+  "name": "Complaint",
+  "description": "App to let users leave feedback on any website",
+  "version": "1.0",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": "kirbymad.png"
+  },
+  "host_permissions": ["https://*/", "http://*/"],
+  "permissions": ["activeTab", "identity", "identity.email", "tabs"]
+}

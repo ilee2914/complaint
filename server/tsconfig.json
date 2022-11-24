@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "outDir": "./dist/",
+    "baseUrl": "src",
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "paths": {
+      "src/*": ["src/*"]
+    },
+    "moduleResolution": "node"
+  },
+  "include": ["src/**/*.ts"]
+}

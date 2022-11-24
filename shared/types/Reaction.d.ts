@@ -1,0 +1,3 @@
+interface Reaction {
+  id: string;
+}
