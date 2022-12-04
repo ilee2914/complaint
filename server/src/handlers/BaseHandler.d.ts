@@ -1,4 +1,4 @@
 interface BaseHandler {
   path(): string;
-  action(data: Object): Object;
+  handle(data: Object): Object;
 }

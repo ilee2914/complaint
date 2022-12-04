@@ -2,16 +2,16 @@ interface LoadObject {
   username: string;
 }
 
-const LoadHandler: BaseHandler = {
+const CommentHandler: BaseHandler = {
   path(): string {
-    return "/load";
+    return "/comment";
   },
   handle(data: Object): LoadObject {
-    console.log("@@@@");
+    console.log("!!!");
     return {
       username: "gooby",
     };
   },
 };
 
-export { LoadHandler };
+export { CommentHandler };

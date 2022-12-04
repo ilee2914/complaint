@@ -1,17 +1,20 @@
-import { LoadHandler } from "./LoadHandler";
+import { LoadHandler } from "./LoadHandler.js";
+import { CommentHandler } from "./CommentHandler.js";
 
-let handlers = new Map<string, BaseHandler>();
+let handlers = new Map<string, Function>();
 
 export default {
   async init(): Promise<void> {
-    handlers.set(LoadHandler.path(), LoadHandler);
+    handlers.set(LoadHandler.path(), LoadHandler.handle);
+    handlers.set(CommentHandler.path(), CommentHandler.handle);
   },
 
   async route(path: string, data: Object): Promise<Object> {
-    const handler = handlers.get(path);
+    const handle = handlers.get(path);
+    console.log(data);
 
-    if (handler) {
-      return handler.action(data);
+    if (handle) {
+      return handle(data);
     }
 
     return {};

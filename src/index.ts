@@ -1,3 +1,5 @@
+let tabUrl: string | undefined = "";
+
 async function getCurrentTab(): Promise<chrome.tabs.Tab> {
   let queryOptions = { active: true, lastFocusedWindow: true };
   // `tab` will either be a `tabs.Tab` instance or `undefined`.
@@ -21,7 +23,7 @@ async function postData(url: string = "", data: Object = {}): Promise<any> {
   });
 
   let fullResponse = "";
-  const reader = response.body?.getReader();
+  const reader = response?.body?.getReader();
   const decoder = new TextDecoder();
 
   while (true) {
@@ -43,6 +45,8 @@ async function createForm(): Promise<void> {
   chrome.identity.getProfileUserInfo(async (info) => {
     let element = document.getElementById("gooby");
     let email = info.email;
+    const tab = await getCurrentTab();
+    tabUrl = tab.url;
 
     if (!element) {
       return;
@@ -52,28 +56,50 @@ async function createForm(): Promise<void> {
       element.innerHTML = `<div>
           Log into Google Chrome to comment.
         </div>`;
+      return;
     }
 
-    const path = "load";
-    const hostname = "https://127.0.0.1:8080/";
-    const url = hostname + path;
+    let data = {
+      email: email,
+    };
 
-    const tab = await getCurrentTab();
-    const tabUrl = tab.url;
+    let response = await sendRequest("load", data);
+    element.innerHTML = `<div>${response["username"]}</div>`;
 
-    if (tabUrl) {
-      const { hostname } = new URL(tabUrl);
-      let data = {
-        url: hostname,
-        email: email,
-      };
-      let response = await postData(url, data);
-
-      element.innerHTML = `<div>${response["gooby"]}</div>`;
-    }
+    return;
   });
 }
 
-async function main(): Promise<void> {
-  createForm();
+async function sendRequest(path: string, data: any) {
+  const hostname = "https://127.0.0.1:8080/";
+  const url = hostname + path;
+
+  if (tabUrl) {
+    data["tabUrl"] = tabUrl;
+    let response = await postData(url, data);
+    return response;
+  }
 }
+
+async function comment(content: string) {
+  const data = {
+    comment: content,
+  };
+  await sendRequest("comment", data);
+}
+
+document
+  .getElementById("comment-form")
+  ?.addEventListener("keydown", async (event) => {
+    const keypress = event.key;
+    if (keypress == "Enter") {
+      event.preventDefault();
+      await comment("ass");
+    }
+  });
+
+document.getElementById("submit")?.addEventListener("click", async (event) => {
+  await comment("ass");
+});
+
+createForm();

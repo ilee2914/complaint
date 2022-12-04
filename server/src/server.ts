@@ -2,35 +2,29 @@ import https from "https";
 import http from "http";
 import fs from "fs";
 import GUN from "gun";
-import PathRouter from "./handlers/PathRouter";
+import PathRouter from "./handlers/PathRouter.js";
 
 let count = 0;
 
-const requestListener = function (
+const requestListener = async function (
   req: http.IncomingMessage,
   res: http.ServerResponse
 ) {
-  count++;
-  console.log(count);
   let body = "";
-  let result = null;
   req.on("data", (chunk) => {
     body += chunk;
   });
-  req.on("end", () => {
-    console.log(body);
+  req.on("end", async () => {
     const pathname = req.url;
-    console.log(pathname);
 
     if (pathname) {
       const jsonBody = JSON.parse(body);
-      result = PathRouter.route(pathname, jsonBody);
+      let result = await PathRouter.route(pathname, jsonBody);
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.write(JSON.stringify(result));
+      res.end();
     }
   });
-
-  res.writeHead(200, { "Content-Type": "application/json" });
-  res.write(JSON.stringify(result));
-  res.end();
 };
 
 const options = {
