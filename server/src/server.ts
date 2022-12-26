@@ -1,7 +1,6 @@
 import https from "https";
 import http from "http";
 import fs from "fs";
-import GUN from "gun";
 import PathRouter from "./handlers/PathRouter.js";
 
 let count = 0;
@@ -17,13 +16,15 @@ const requestListener = async function (
   req.on("end", async () => {
     const pathname = req.url;
 
-    if (pathname) {
+    if (pathname && body) {
       const jsonBody = JSON.parse(body);
-      let result = await PathRouter.route(pathname, jsonBody);
-      res.writeHead(200, { "Content-Type": "application/json" });
-      res.write(JSON.stringify(result));
-      res.end();
+      if (jsonBody) {
+        let result = await PathRouter.route(pathname, jsonBody);
+        res.write(JSON.stringify(result));
+      }
     }
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end();
   });
 };
 
