@@ -15,6 +15,7 @@ const requestListener = async function (
   });
   req.on("end", async () => {
     const pathname = req.url;
+    res.writeHead(200, { "Content-Type": "application/json" });
 
     if (pathname && body) {
       const jsonBody = JSON.parse(body);
@@ -23,7 +24,6 @@ const requestListener = async function (
         res.write(JSON.stringify(result));
       }
     }
-    res.writeHead(200, { "Content-Type": "application/json" });
     res.end();
   });
 };

@@ -1,12 +1,15 @@
-import GUN from "gun";
-import { v4 as uuidv4 } from "uuid";
+import { Comment } from "../ogm-types.js";
+import { User, Domain } from "../connection.js";
+import { generateRandomUserName } from "../utils.js";
 
 interface LoadRequest {
   email: string;
+  tabUrl: string;
 }
 
 interface LoadResponse {
-  id: string;
+  username: string;
+  comments: any;
 }
 
 const LoadHandler: BaseHandler = {
@@ -14,27 +17,44 @@ const LoadHandler: BaseHandler = {
     return "/load";
   },
   async handle(data: LoadRequest): Promise<LoadResponse> {
-    let gun = GUN();
-    let relation = gun.get(data.email);
-    let id = "";
-    let username = "";
-
-    gun.get(data.email, function (ack) {
-      if (!ack.put) {
-        console.log("a");
-        gun.get(data.email).put({
-          id: uuidv4(),
-          email: data.email,
-        });
-      } else {
-        console.log("b");
-      }
-    });
-
-    return {
-      id: id,
+    let response: LoadResponse = {
+      username: await getUsername(data.email),
+      comments: await getComments(data.tabUrl),
     };
+
+    return response;
   },
 };
+
+async function getUsername(email: string): Promise<string> {
+  const result = await User.find({
+    where: { email: email },
+  });
+
+  if (!result.length) {
+    const randomUsername = await generateRandomUserName();
+    await User.create({
+      input: [
+        {
+          email: email,
+        },
+      ],
+    });
+    return randomUsername;
+  } else {
+    return result[0].username ? result[0].username : "";
+  }
+}
+
+async function getComments(url: string): Promise<Comment[] | null> {
+  let domain = await Domain.find({ where: { name: url } });
+  if (!domain.length) {
+    let x = domain[0]?.commentsAggregate?.node?.comment;
+    console.log(x);
+  } else {
+    Domain.create({ input: [{ name: url }] });
+  }
+  return null;
+}
 
 export { LoadHandler };

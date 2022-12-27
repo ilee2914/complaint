@@ -8,6 +8,7 @@ async function getCurrentTab(): Promise<chrome.tabs.Tab> {
 }
 
 async function postData(url: string = "", data: Object = {}): Promise<any> {
+  console.log("s");
   let response = await fetch(url, {
     method: "POST", // *GET, POST, PUT, DELETE, etc.
     mode: "cors", // no-cors, *cors, same-origin
@@ -37,7 +38,6 @@ async function postData(url: string = "", data: Object = {}): Promise<any> {
       break;
     }
   }
-
   return JSON.parse(fullResponse);
 }
 

@@ -11,7 +11,6 @@ export default {
 
   async route(path: string, data: Object): Promise<Object> {
     const handle = handlers.get(path);
-    console.log(data);
 
     if (handle) {
       return handle(data);
